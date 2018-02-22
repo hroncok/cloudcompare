@@ -18,7 +18,7 @@
 %global edition Release
 %global cname   CloudCompare
 Name:           cloudcompare
-Version:        2.8.1
+Version:        2.9.1
 Release:        1%{?dist}
 Summary:        3D point cloud and mesh processing software
 
@@ -35,7 +35,7 @@ URL:            http://www.cloudcompare.org/
 Source0:        https://github.com/%{cname}/%{cname}/archive/v%{version}.tar.gz#/%{cname}-%{version}.tar.gz
 
 # git submodules
-%global pr_commit 7ad96383f639d7625a843c6e97b3ae5579507350
+%global pr_commit f42872b45ac35bf85efc662d348bb5d8ac9e5577
 Source1:        https://github.com/%{cname}/PoissonRecon/archive/%{pr_commit}.tar.gz#/PoissonRecon-%{pr_commit}.tar.gz
 
 %global nh_commit 61ba8056d72eedffadb838d9051cc8975ec7a825
@@ -44,9 +44,6 @@ Source2:        https://github.com/%{cname}/normals_Hough/archive/%{nh_commit}.t
 # desktop files
 Source3:        %{name}.desktop
 Source4:        ccviewer.desktop
-
-# https://github.com/CloudCompare/CloudCompare/commit/a4f7bac826435d8ee22970e8561e9a1931cc4784
-Patch0:         %{name}-cmake-else.patch
 
 BuildRequires:  boost-devel
 BuildRequires:  desktop-file-utils
@@ -93,6 +90,7 @@ Provides:       bundled(dxflib) = 3.3.4
 Provides:       %{cname} = %{version}-%{release}
 %{?_isa:Provides:       %{cname}%{_isa} = %{version}-%{release}}
 
+Requires:       hicolor-icon-theme
 
 # Do not RPM provide .so files only used internally:
 %global __provides_exclude_from ^%{_libdir}/%{name}/.*$
@@ -198,20 +196,6 @@ done
 desktop-file-install --dir=%{buildroot}%{_datadir}/applications %{SOURCE3}
 desktop-file-install --dir=%{buildroot}%{_datadir}/applications %{SOURCE4}
 
-%post
-/bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
-/usr/bin/update-desktop-database &>/dev/null || :
-
-%postun
-if [ $1 -eq 0 ] ; then
-    /bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null
-    /usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
-fi
-/usr/bin/update-desktop-database &>/dev/null || :
-
-%posttrans
-/usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
-update-desktop-database &>/dev/null || :
 
 %files
 %doc README.md CONTRIBUTING.md CHANGELOG.md doc
@@ -228,9 +212,14 @@ update-desktop-database &>/dev/null || :
 %{_datadir}/applications/*.desktop
 
 %changelog
+* Thu Feb 22 2018 Miro Hrončok <mhroncok@redhat.com> - 2.9.1-1
+- Updated to 2.9.1
+- Remove merged patch
+- Removed obsolete icon scriptlets
+- Require hicolor-icon-theme
+
 * Sat Sep 09 2017 Miro Hrončok <mhroncok@redhat.com> - 2.8.1-1
 - Updated to 2.8.1
 
 * Mon Jan 16 2017 Miro Hrončok <mhroncok@redhat.com> - 2.8.0-1
 - Initial package adapted from openSUSE package
-
