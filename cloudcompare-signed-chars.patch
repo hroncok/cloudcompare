@@ -1,0 +1,118 @@
+From 457ee6699bfbe95a387bc53667c6b2ab39917d3b Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Miro=20Hron=C4=8Dok?= <miro@hroncok.cz>
+Date: Thu, 22 Feb 2018 17:23:25 +0100
+Subject: [PATCH] Be explicit about signed chars
+
+Chars being signed is apparently an implementation detail, see [1].
+
+This was failing the build on various architectures:
+
+    ppc64le aarch64 ppc64 s390x armv7hl
+
+With:
+
+    CC/src/ChamferDistanceTransform.cpp:44:1:
+    error: narrowing conversion of '-1' from 'int' to 'char' inside { }
+    ...
+
+[1] https://stackoverflow.com/q/31634962/1839451
+---
+ CC/src/ChamferDistanceTransform.cpp | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
+
+diff --git a/CC/src/ChamferDistanceTransform.cpp b/CC/src/ChamferDistanceTransform.cpp
+index 5cba46c6..026b2349 100644
+--- a/CC/src/ChamferDistanceTransform.cpp
++++ b/CC/src/ChamferDistanceTransform.cpp
+@@ -26,7 +26,7 @@
+ using namespace CCLib;
+ 
+ //! Forward mask shifts and weights (Chamfer 3-4-5)
+-const char ForwardNeighbours345[14*4] = {
++const signed char ForwardNeighbours345[14*4] = {
+ 	-1,-1,-1, 5,
+ 	 0,-1,-1, 4,
+ 	 1,-1,-1, 5,
+@@ -44,7 +44,7 @@ const char ForwardNeighbours345[14*4] = {
+ };
+ 
+ //! Backward mask shifts and weights (Chamfer 3-4-5)
+-const char BackwardNeighbours345[14*4] = {
++const signed char BackwardNeighbours345[14*4] = {
+ 	 0, 0, 0, 0,
+ 	 1, 0, 0, 3,
+ 	-1, 1, 0, 4,
+@@ -62,7 +62,7 @@ const char BackwardNeighbours345[14*4] = {
+ };
+ 
+ //! Forward mask shifts and weights (Chamfer 1-1-1)
+-const char ForwardNeighbours111[14*4] = {
++const signed char ForwardNeighbours111[14*4] = {
+ 	-1,-1,-1, 1,
+ 	 0,-1,-1, 1,
+ 	 1,-1,-1, 1,
+@@ -80,7 +80,7 @@ const char ForwardNeighbours111[14*4] = {
+ };
+ 
+ //! Backward masks shifts and weights (Chamfer 1-1-1)
+-const char BackwardNeighbours111[14*4] = {
++const signed char BackwardNeighbours111[14*4] = {
+ 	 0, 0, 0, 0,
+ 	 1, 0, 0, 1,
+ 	-1, 1, 0, 1,
+@@ -101,7 +101,7 @@ const char BackwardNeighbours111[14*4] = {
+ //																					unsigned jStart,
+ //																					unsigned kStart,
+ //																					bool forward,
+-//																					const char neighbours[14][4],
++//																					const signed char neighbours[14][4],
+ //																					NormalizedProgress* normProgress/*=0*/)
+ //{
+ //	assert(!m_grid.empty());
+@@ -169,8 +169,8 @@ int ChamferDistanceTransform::propagateDistance(CC_CHAMFER_DISTANCE_TYPE type, G
+         return -1;
+ 	}
+ 
+-	const char* fwNeighbours = 0;
+-	const char* bwNeighbours = 0;
++	const signed char* fwNeighbours = 0;
++	const signed char* bwNeighbours = 0;
+ 	switch (type)
+ 	{
+ 	case CHAMFER_111:
+@@ -216,7 +216,7 @@ int ChamferDistanceTransform::propagateDistance(CC_CHAMFER_DISTANCE_TYPE type, G
+ 		{
+ 			for (unsigned char v=0; v<14; ++v)
+ 			{
+-				const char* fwNeighbour = fwNeighbours + 4*v;
++				const signed char* fwNeighbour = fwNeighbours + 4*v;
+ 				neighborShift[v] =	static_cast<int>(fwNeighbour[0]) +
+ 									static_cast<int>(fwNeighbour[1]) * static_cast<int>(m_rowSize) +
+ 									static_cast<int>(fwNeighbour[2]) * static_cast<int>(m_sliceSize);
+@@ -233,7 +233,7 @@ int ChamferDistanceTransform::propagateDistance(CC_CHAMFER_DISTANCE_TYPE type, G
+ 
+ 					for (unsigned char v=1; v<14; ++v)
+ 					{
+-						const char* fwNeighbour = fwNeighbours + 4*v;
++						const signed char* fwNeighbour = fwNeighbours + 4*v;
+ 						GridElement neighborVal = _grid[neighborShift[v]] + static_cast<GridElement>(fwNeighbour[3]);
+ 						minVal = std::min(minVal, neighborVal);
+ 					}
+@@ -260,7 +260,7 @@ int ChamferDistanceTransform::propagateDistance(CC_CHAMFER_DISTANCE_TYPE type, G
+ 		{
+ 			for (unsigned char v=0; v<14; ++v)
+ 			{
+-				const char* bwNeighbour = bwNeighbours + 4*v;
++				const signed char* bwNeighbour = bwNeighbours + 4*v;
+ 				neighborShift[v] =	static_cast<int>(bwNeighbour[0]) +
+ 									static_cast<int>(bwNeighbour[1]) * static_cast<int>(m_rowSize) +
+ 									static_cast<int>(bwNeighbour[2]) * static_cast<int>(m_sliceSize);
+@@ -279,7 +279,7 @@ int ChamferDistanceTransform::propagateDistance(CC_CHAMFER_DISTANCE_TYPE type, G
+ 
+ 					for (unsigned char v=1; v<14; ++v)
+ 					{
+-						const char* bwNeighbour = bwNeighbours + 4*v;
++						const signed char* bwNeighbour = bwNeighbours + 4*v;
+ 						GridElement neighborVal = _grid[neighborShift[v]] + static_cast<GridElement>(bwNeighbour[3]);
+ 						minVal = std::min(minVal, neighborVal);
+ 					}

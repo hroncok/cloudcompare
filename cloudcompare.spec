@@ -45,6 +45,12 @@ Source2:        https://github.com/%{cname}/normals_Hough/archive/%{nh_commit}/n
 Source3:        %{name}.desktop
 Source4:        ccviewer.desktop
 
+# https://github.com/CloudCompare/CloudCompare/pull/648
+Patch0:         %{name}-signed-chars.patch
+
+# https://github.com/CloudCompare/CloudCompare/issues/649
+ExcludeArch:    ppc64 s390x
+
 BuildRequires:  boost-devel
 BuildRequires:  desktop-file-utils
 BuildRequires:  cmake >= 3
@@ -168,7 +174,6 @@ pushd build
    -DINSTALL_QPCV_PLUGIN=ON \
    -DINSTALL_QPHOTOSCAN_IO_PLUGIN=ON \
    -DINSTALL_QPOISSON_RECON_PLUGIN=ON \
-   -DINSTALL_QRANSAC_SD_PLUGIN=ON \
    -DINSTALL_QSRA_PLUGIN=ON \
    -DINSTALL_QSSAO_PLUGIN=ON \
    -DLIBLAS_INCLUDE_DIR=%{_includedir}/liblas \
@@ -179,9 +184,14 @@ pushd build
    -DOPTION_USE_LIBLAS=ON \
    -DOPTION_USE_SHAPE_LIB=ON \
    -DSHAPELIB_SOURCE_DIR=%{_includedir} \
+%ifarch %ix86 x86_64
+   -DINSTALL_QRANSAC_SD_PLUGIN=ON \
+%else
+   -DINSTALL_QRANSAC_SD_PLUGIN=OFF \
+%endif
    ..
 
-#   -DINSTALL_QGMMREG_PLUGIN=ON \ # Fails with our vxl
+# QRANSAC_SD_PLUGIN on other arches: fatal error: xmmintrin.h: No such file or directory
 
 
 %make_build VERBOSE=1
@@ -233,6 +243,7 @@ desktop-file-install --dir=%{buildroot}%{_datadir}/applications %{SOURCE4}
 - Require hicolor-icon-theme
 - Use make macros
 - Split doc to doc subpackage
+- Add fix for "other" arches, but exclude BE for now
 
 * Sat Sep 09 2017 Miro Hrončok <mhroncok@redhat.com> - 2.8.1-1
 - Updated to 2.8.1
