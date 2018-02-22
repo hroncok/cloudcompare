@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.1
+Name=CloudCompare Viewer
+GenericName=3D point cloud viewer
+Comment=Application for 3D point cloud (and triangular mesh) viewing
+Type=Application
+Exec=ccViewer %U
+Icon=ccviewer
+Terminal=false
+Categories=Graphics;
+TryExec=ccViewer
+MimeType=model/x.stl-binary;model/x.stl-ascii;
