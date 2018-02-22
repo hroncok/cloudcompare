@@ -32,14 +32,14 @@ License:        GPLv2+
 
 URL:            http://www.cloudcompare.org/
 
-Source0:        https://github.com/%{cname}/%{cname}/archive/v%{version}.tar.gz#/%{cname}-%{version}.tar.gz
+Source0:        https://github.com/%{cname}/%{cname}/archive/v%{version}/%{cname}-%{version}.tar.gz
 
 # git submodules
 %global pr_commit f42872b45ac35bf85efc662d348bb5d8ac9e5577
-Source1:        https://github.com/%{cname}/PoissonRecon/archive/%{pr_commit}.tar.gz#/PoissonRecon-%{pr_commit}.tar.gz
+Source1:        https://github.com/%{cname}/PoissonRecon/archive/%{pr_commit}/PoissonRecon-%{pr_commit}.tar.gz
 
 %global nh_commit 61ba8056d72eedffadb838d9051cc8975ec7a825
-Source2:        https://github.com/%{cname}/normals_Hough/archive/%{nh_commit}.tar.gz#/normals_Hough-%{nh_commit}.tar.gz
+Source2:        https://github.com/%{cname}/normals_Hough/archive/%{nh_commit}/normals_Hough-%{nh_commit}.tar.gz
 
 # desktop files
 Source3:        %{name}.desktop
