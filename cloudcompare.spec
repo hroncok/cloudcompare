@@ -173,12 +173,12 @@ pushd build
 #   -DINSTALL_QGMMREG_PLUGIN=ON \ # Fails with our vxl
 
 
-make VERBOSE=1 %{?_smp_mflags}
+%make_build VERBOSE=1
 popd
 
 %install
 pushd build
-make DESTDIR=%{buildroot} install %{?_smp_mflags}
+%make_install VERBOSE=1
 popd
 
 # lower-case symblinks
@@ -217,6 +217,7 @@ desktop-file-install --dir=%{buildroot}%{_datadir}/applications %{SOURCE4}
 - Remove merged patch
 - Removed obsolete icon scriptlets
 - Require hicolor-icon-theme
+- Use make macros
 
 * Sat Sep 09 2017 Miro Hrončok <mhroncok@redhat.com> - 2.8.1-1
 - Updated to 2.8.1
