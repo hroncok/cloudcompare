@@ -139,6 +139,12 @@ rmdir plugins/qHoughNormals/normals_Hough
 tar -xf %{SOURCE2}
 mv normals_Hough-%{nh_commit} plugins/qHoughNormals/normals_Hough
 
+# fix spurious executable permissions
+# https://github.com/aboulch/normals_Hough/pull/5
+# https://github.com/CloudCompare/normals_Hough/pull/3
+# https://github.com/CloudCompare/CloudCompare/pull/650
+find plugins/qHoughNormals '(' -name '*.h' -o -name '*.hpp' ')' -exec chmod -x {} \;
+
 # On 64bits, change /usr/lib/cloudcompare to /usr/lib64/cloudcompare
 sed -i 's|lib/%{name}|%{_lib}/%{name}|g' $(grep -r lib/%{name} -l)
 
