@@ -111,6 +111,17 @@ software, including many advanced algorithms (registration, resampling,
 color/normal/scalar fields handling, statistics computation, sensor
 management, interactive or automatic segmentation, display enhancement...).
 
+
+%package doc
+Summary:        Documentation for %{cname}
+Requires:       %{name} == %{version}-%{release}
+BuildArch:      noarch
+
+%description doc
+CloudCompare is a 3D point cloud (and triangular mesh) processing software.
+This is the documentation.
+
+
 %prep
 %autosetup -n %{cname}-%{version} -p1
 
@@ -198,7 +209,7 @@ desktop-file-install --dir=%{buildroot}%{_datadir}/applications %{SOURCE4}
 
 
 %files
-%doc README.md CONTRIBUTING.md CHANGELOG.md doc
+%doc README.md CONTRIBUTING.md CHANGELOG.md
 %license license.txt license_headers.txt
 %{_bindir}/%{name}
 %{_bindir}/%{cname}
@@ -211,6 +222,9 @@ desktop-file-install --dir=%{buildroot}%{_datadir}/applications %{SOURCE4}
 %{_datadir}/icons/hicolor/*/apps/*.png
 %{_datadir}/applications/*.desktop
 
+%files doc
+%doc doc
+
 %changelog
 * Thu Feb 22 2018 Miro Hrončok <mhroncok@redhat.com> - 2.9.1-1
 - Updated to 2.9.1
@@ -218,6 +232,7 @@ desktop-file-install --dir=%{buildroot}%{_datadir}/applications %{SOURCE4}
 - Removed obsolete icon scriptlets
 - Require hicolor-icon-theme
 - Use make macros
+- Split doc to doc subpackage
 
 * Sat Sep 09 2017 Miro Hrončok <mhroncok@redhat.com> - 2.8.1-1
 - Updated to 2.8.1
