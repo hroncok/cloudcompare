@@ -49,7 +49,7 @@ Source4:        ccviewer.desktop
 Patch0:         %{name}-signed-chars.patch
 
 # https://github.com/CloudCompare/CloudCompare/issues/649
-ExcludeArch:    ppc64 s390x
+Patch1:         %{name}-big-endian.patch
 
 BuildRequires:  boost-devel
 BuildRequires:  desktop-file-utils
